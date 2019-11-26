@@ -38,9 +38,9 @@
       }
       .slider ul {
         list-style: none;
-        width: 500px;
+        width: 1500px;
         position: relative;
-        left: 0;
+        /* left: 0; */
         padding: 0;
         margin: 0;
       }
@@ -73,22 +73,24 @@
         let currentImg = 1;
         let imgBox = $(".slider ul");
         console.log(imgBox);
-        imgBox.css("width", "1500px")
+        // imgBox.css("width", "1500px")
         $(".nav button").on("click", e => {
           let btn = $(e.target).data("nav");
-          console.log(btn, " is clicked!");
+          let pos = 0;
+          console.log("curr:", currentImg);
+          console.log("currentImg", currentImg);
+
           if (btn == "next") {
-            imgBox.animate({
-              "left": "-500px"
-            });
             currentImg += 1;
+            pos = ((currentImg - 1) % 3) * -500;
           } else {
-            imgBox.animate({
-              "left": "+500px"
-            })
             currentImg -= 1;
+            pos = ((currentImg - 1) % 3) * -500;
           }
-          currentImg %= 3;
+          console.log(btn, " is clicked! pos:", pos);
+          imgBox.animate({
+            left: pos
+          });
         });
       });
     </script>
