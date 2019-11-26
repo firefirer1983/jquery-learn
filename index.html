@@ -38,9 +38,9 @@
       }
       .slider ul {
         list-style: none;
-        width: 1500px;
-        /* position: relative; */
-        /* left: -1000px; */
+        width: 500px;
+        position: relative;
+        left: 0;
         padding: 0;
         margin: 0;
       }
@@ -55,9 +55,9 @@
       <header>Project Slider</header>
       <div class="slider">
         <ul>
-          <li><img src="./img/1.jpg" alt="1.jpg"></li>
-          <li><img src="./img/2.jpg" alt="2.jpg"></li>
-          <li><img src="./img/3.jpg" alt="3.jpg"></li>
+          <li><img src="./img/1.jpg" alt="1.jpg" /></li>
+          <li><img src="./img/2.jpg" alt="2.jpg" /></li>
+          <li><img src="./img/3.jpg" alt="3.jpg" /></li>
         </ul>
         <div class="nav">
           <button data-nav="prev">&lt;</button>
@@ -66,16 +66,30 @@
       </div>
       <section></section>
       <aside></aside>
-      <footer>
-      </footer>
+      <footer></footer>
     </div>
     <script>
       $(() => {
-        $(".nav button").on("click", (e)=>{
-          let btn = $(e.target).data("nav")
+        let currentImg = 1;
+        let imgBox = $(".slider ul");
+        console.log(imgBox);
+        imgBox.css("width", "1500px")
+        $(".nav button").on("click", e => {
+          let btn = $(e.target).data("nav");
           console.log(btn, " is clicked!");
-          
-        })
+          if (btn == "next") {
+            imgBox.animate({
+              "left": "-500px"
+            });
+            currentImg += 1;
+          } else {
+            imgBox.animate({
+              "left": "+500px"
+            })
+            currentImg -= 1;
+          }
+          currentImg %= 3;
+        });
       });
     </script>
   </body>
