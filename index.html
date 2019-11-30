@@ -53,6 +53,7 @@
   <body>
     <div id="main">
       <header>Project Slider</header>
+      <input type="text" name="" id="" onchange="validate(this, 18, 99)">
       <div class="slider">
         <ul>
           <li><img src="./img/1.jpg" alt="1.jpg" /></li>
@@ -69,6 +70,16 @@
       <footer></footer>
     </div>
     <script>
+      function validate(elm, min, max) {
+        console.log(elm)
+        console.log('val:', elm.value);
+        if (elm.value < max && elm.value >= min) {
+          console.log('Valid!');
+        } else {
+          console.log("Invalid")
+        }
+        
+      }
       $(() => {
         let currentImg = 1;
         let imgBox = $(".slider ul");
