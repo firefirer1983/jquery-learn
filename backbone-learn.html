@@ -7,12 +7,17 @@
     <title>Document</title>
   </head>
   <body>
-    <div id="container">
-
+    <header>
+      <input id="newTodos" type="text" placeholder="What need to be done?">
+    </header>
+    <section id="main">
+      <ul id="todo-list"></ul>
+    </section>
     </div>
     <script src="./node_modules/jquery/dist/jquery.js"></script>
     <script src="./node_modules/underscore/underscore.js"></script>
     <script src="./node_modules/backbone/backbone.js"></script>
+    <script src="./node_modules/backbone.localstorage/build/backbone.localStorage.js"></script>
     <script src="bb.js"></script>
   </body>
 </html>
