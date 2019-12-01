@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="test"></div>
+    <script type="text/template" id="greeting">
+      <h1>Hello World</h1>
+    </script>
+    <script src="./node_modules/underscore/underscore.js"></script>
+    <script src="./node_modules/jquery/dist/jquery.js"></script>
+    <script src="./node_modules/backbone/backbone.js"></script>
+    <script src="./node_modules/backbone.localstorage/build/backbone.localStorage.js"></script>
+    <script type="text/javascript">
+      "use strict"
+      let Person = Backbone.Model.extend({
+        defaults: {
+          name: "XY",
+          age: 28,
+          occupation: "Worker"
+        }
+      });
+      // var Person = Backbone.Model.extend({
+      //   defaults: {
+      //     name: "Guest User",
+      //     age: 23,
+      //     occupation: "worker"
+      //   }
+      // });
+
+      let PersonView = Backbone.View.extend({
+        el: "#test",
+        template: _.template($("#greeting").html()),
+        initialize: function() {
+          console.log("initialize");
+          this.render();
+        },
+        render: function() {
+          this.$el.html(this.template())
+        }
+      });
+      // var PersonView = Backbone.View.extend({
+      //   // tagName: "li",
+      //   el: "#test",
+
+      //   // my_template: _.template(
+      //   //   "<strong><%= name %></strong> (<%= age %>) - <%= occupation %>"
+      //   // ),
+
+      //   initialize: function() {
+      //     this.render();
+      //   },
+
+      //   render: function() {
+      //     // this.$el.html(this.my_template(this.model.toJSON()));
+      //     this.$el.html("<h1>Hello<\h1>")
+      //   }
+      // });
+      let person = new Person();
+      let view = new PersonView({ model: person });
+    </script>
+  </body>
+</html>
