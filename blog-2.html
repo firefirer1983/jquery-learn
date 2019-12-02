@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="./node_modules/bootstrap/dist/css/bootstrap.css"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <table class="table">
+        <h1 style="text-align: center;">BLOG ROLL</h1>
+        <thead>
+          <tr>
+            <th>Author</th>
+            <th>Title</th>
+            <th>URL</th>
+            <th>Action</th>
+          </tr>
+          <tr>
+            <th><input class="author-input"></input></th>
+            <th><input class="title-input"></input></th>
+            <th><input class="url-input"></input></th>
+            <th><button class="btn btn-success blog-add">Add</button></th>
+          </tr>
+        </thead>
+        <tbody id="blog-list"></tbody>
+      </table>
+    </div>
+
+    <script src="./node_modules/underscore/underscore.js"></script>
+    <script src="./node_modules/jquery/dist/jquery.js"></script>
+    <script src="./node_modules/backbone/backbone.js"></script>
+    <script src="./node_modules/backbone.localstorage/build/backbone.localStorage.js"></script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script type="text/template" id="blog-item-template">
+      <td><%-author%></td>
+      <td><%-title%></td>
+      <td><%-url%></td>
+      <td>
+        <button class="btn btn-warning blog-edit">Edit</button>
+        <button class="btn btn-danger blog-delete">Delete</button>
+      </td>
+    </script>
+    <script type="text/template" id="blog-item-editing-template">
+      <td><input type="text" class="author-edit" value=<%-author%>></td>
+      <td><input type="text" class="title-edit" value=<%-title%>></td>
+      <td><input type="text" class="url-edit" value=<%-url%>></td>
+      <td>
+        <button class="btn btn-primary blog-update" >Update</button>
+        <button class="btn btn-danger blog-cancel">Cancel</button>
+      </td>
+    </script>
+    <script>
+      const Blog = Backbone.Model.extend({
+        defaults: {
+          id: "",
+          author: "",
+          title: "",
+          url: "",
+          action: ""
+        }
+      });
+
+      const Blogs = Backbone.Collection.extend({
+        model: Blog,
+        localStorage: new Backbone.LocalStorage("blogs")
+      });
+
+      const BlogView = Backbone.View.extend({
+        tagName: "tr",
+        template: _.template($("#blog-item-template").html()),
+        editingTemplate: _.template($("#blog-item-editing-template").html()),
+        initialize: function() {
+          const self = this
+          this.model.on("change", function(){
+            console.log('blog view changed!');
+            self.render();
+          })
+        },
+        events: {
+          "click .blog-edit": "enterEdit",
+          "click .blog-update": "updateEdit",
+          "click .blog-cancel": "cancelEdit",
+          "click .blog-delete": "deleteBlog"
+        },
+        enterEdit: function(elm) {
+          return this.$el.html(this.editingTemplate(this.model.toJSON()));
+        },
+        updateEdit: function(elm) {
+          this.model.set({
+            author: this.$(".author-edit").val(),
+            title: this.$(".title-edit").val(),
+            url: this.$(".url-edit").val()
+          })
+          this.render()
+        },
+        cancelEdit: function(elm) {
+          this.render()
+        },
+        deleteBlog: function(elm) {
+          console.log('delete blog!');
+          this.model.destroy()
+        },
+        render: function() {
+          return this.$el.html(this.template(this.model.toJSON()));
+        }
+      });
+
+      const BlogsView = Backbone.View.extend({
+        el: "#blog-list",
+        appendBlog: function(blog) {
+          let blogvw = new BlogView({model: blog});
+          this.$el.append(blogvw.render());
+        },
+        initialize: function() {
+          _.each(
+            this.collection.toArray(),
+            this.appendBlog,
+            this
+          );
+          const self = this
+          this.collection.on("add", function(blog){
+            self.appendBlog(blog)
+          })
+
+          this.collection.on("remove", function(blog) {
+            // console.log('one remove!', blog);
+            // _.each(self.$el.children(), function(child) {
+            //   console.log(child);
+            // }, self)
+
+          })
+        }
+      });
+      const blogs = new Blogs([])
+      new BlogsView({collection: blogs});
+      $().ready(()=>{
+        
+        $(".blog-add").on("click", function(){
+          const authorInput = $(".author-input")
+          const titleInput = $(".title-input")
+          const urlInput = $(".url-input")
+          let itm = {
+            id: blogs.length,
+            author: authorInput.val(),
+            title: titleInput.val(),
+            url: urlInput.val()
+          }
+          blogs.add(itm)
+          authorInput.val("")
+          titleInput.val("")
+          urlInput.val("")
+        })
+      })
+    </script>
+  </body>
+</html>

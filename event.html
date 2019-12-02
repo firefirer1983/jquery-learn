@@ -8,19 +8,33 @@
   </head>
   <body>
     <div class="main">
-      <input type="button" value="Trigger Event" class="event">
+      <input type="button" value="Trigger Event" class="event" />
     </div>
-    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="./node_modules/underscore/underscore-min.js"></script>
-    <script src="./node_modules/backbone/backbone-min.js"></script>
+    <!-- <script src="./node_modules/jquery/dist/jquery.min.js"></script> -->
+    <!-- <script src="./node_modules/underscore/underscore-min.js"></script> -->
+    <!-- <script src="./node_modules/backbone/backbone-min.js"></script> -->
     <script>
-      Backbone.Events.on("test", () => {
-        console.log("Backbone event trigger");
-      });
-      $("input.event").on("click", () => {
-        console.log("button clicked!");
-        Backbone.Events.trigger("test");
-      });
+      var _ = function(obj) {
+        // 以下均针对 OOP 形式的调用
+        // 如果是非 OOP 形式的调用，不会进入该函数内部
+
+        // 如果 obj 已经是 `_` 函数的实例，则直接返回 obj
+        if (obj instanceof _) return obj;
+
+        // 如果不是 `_` 函数的实例
+        // 则调用 new 运算符，返回实例化的对象
+        console.log("this:", this)
+        if (!(this instanceof _)) {
+          console.log("not instanceof!")
+          return new _(obj);
+        }
+          
+        console.log("yes, instanceof")
+        // 将 obj 赋值给 this._wrapped 属性
+        this._wrapped = obj;
+      };
+      let o = _("hello")
+      // console.log(o)
     </script>
   </body>
 </html>

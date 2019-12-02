@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="./node_modules/bootstrap/dist/css/bootstrap.css"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <table class="table">
+        <h1 style="text-align: center;">BLOG ROLL</h1>
+        <thead>
+          <tr>
+            <th>Author</th>
+            <th>Title</th>
+            <th>URL</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="blog-list"></tbody>
+      </table>
+    </div>
+
+    <script src="./node_modules/underscore/underscore.js"></script>
+    <script src="./node_modules/jquery/dist/jquery.js"></script>
+    <script src="./node_modules/backbone/backbone.js"></script>
+    <script src="./node_modules/backbone.localstorage/build/backbone.localStorage.js"></script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script type="text/template" id="blog-item-template">
+      <td><%-author%></td>
+      <td><%-title%></td>
+      <td><%-url%></td>
+      <td>
+        <button class="btn btn-warning blog-edit">Edit</button>
+        <button class="btn btn-danger blog-delete">Delete</button>
+      </td>
+
+    </script>
+    <script>
+      const Blog = Backbone.Model.extend({
+        defaults: {
+          author: "",
+          title: "",
+          url: "",
+          action: ""
+        }
+      });
+
+      const Blogs = Backbone.Collection.extend({
+        model: Blog,
+        localStorage: new Backbone.LocalStorage("blogs")
+      });
+
+      const BlogView = Backbone.View.extend({
+        tagName: "tr",
+        template: _.template($("#blog-item-template").html()),
+        initialize: function() {
+          console.log("initialize!");
+          this.render();
+        },
+        render: function() {
+          let itm = this.$el.html(this.template(this.model.toJSON()))
+          $("#blog-list").append(itm);
+          console.log(itm)
+          return this;
+        }
+      });
+      new BlogView({
+        model: new Blog({
+          author: "fyman",
+          title: "How to be great?",
+          url: "https://begreat.com",
+          action: "DISCOUNT"
+        })
+      });
+    </script>
+  </body>
+</html>
